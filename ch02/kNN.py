@@ -76,9 +76,9 @@ def dating_class_test():
 
 def classify_person():
     result_list = ["not at all", "in small doses", "in large doses"]
-    percent_tats = float(raw_input("percentage of time spent playing video games?"))
-    ff_miles = float(raw_input("frequent flier miles earned per year?"))
-    ice_cream = float(raw_input("liters of ice cream consumed per year?"))
+    percent_tats = float(input("percentage of time spent playing video games?"))
+    ff_miles = float(input("frequent flier miles earned per year?"))
+    ice_cream = float(input("liters of ice cream consumed per year?"))
     dating_data_mat, dating_labels = file2matrix("datingTestSet2.txt")
     norm_mat, ranges, min_vals = auto_norm(dating_data_mat)
     in_arr = array([ff_miles, percent_tats, ice_cream])
@@ -116,8 +116,9 @@ def handwriting_class_test():
         class_num_str = int(file_str.split("_")[0])
         vector_under_test = img2vector("digits/testDigits/%s" % file_name_str)
         classifier_result = classify0(vector_under_test, training_mat, hw_labels, 3)
-        print("the classifier came back with:%d,the real answer is:%d" % (classifier_result, class_num_str))
         if classifier_result != class_num_str:
+            print("the classifier came back with:%d,the real answer is:%d" % (classifier_result, class_num_str))
+            print(file_name_str)
             errorCount += 1.0
     print("\nthe total number of errors is: %d" % errorCount)
     print("\nthe total error rate is: %f" % (errorCount / float(m_test)))

@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
-from math import log
 import operator
+from math import log
 
 
 def create_data_set():

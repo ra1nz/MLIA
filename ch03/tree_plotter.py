@@ -9,28 +9,28 @@ arrow_args = dict(arrowstyle="<-")
 
 def get_num_leafs(tree):
     num_leafs = 0
-    first_str = tree.keys()[0]
-    second_dict = tree[first_str]
-    for key in second_dict.keys():
-        # 判断数据类型是否为字典类型
-        if type(second_dict[key]) == dict:
-            num_leafs += get_num_leafs(second_dict[key])
-        else:
-            num_leafs += 1
+    for key in tree.keys():
+        second_dict = tree[key]
+        for key in second_dict.keys():
+            # 判断数据类型是否为字典类型
+            if type(second_dict[key]) == dict:
+                num_leafs += get_num_leafs(second_dict[key])
+            else:
+                num_leafs += 1
     return num_leafs
 
 
 def get_tree_depth(tree):
     max_depth = 0
-    first_str = tree.keys()[0]
-    second_dict = tree[first_str]
-    for key in second_dict.keys():
-        if type(second_dict[key]) == dict:
-            this_depth = 1 + get_tree_depth(second_dict[key])
-        else:
-            this_depth = 1
-        if this_depth > max_depth:
-            max_depth = this_depth
+    for key in tree.keys():
+        second_dict = tree[key]
+        for key in second_dict.keys():
+            if type(second_dict[key]) == dict:
+                this_depth = 1 + get_tree_depth(second_dict[key])
+            else:
+                this_depth = 1
+            if this_depth > max_depth:
+                max_depth = this_depth
     return max_depth
 
 
@@ -52,12 +52,12 @@ def plot_mid_text(cntr_pt, parent_pt, txt_string):
 def plotTree(myTree, parentPt, nodeTxt):  # if the first key tells you what feat was split on
     numLeafs = get_num_leafs(myTree)  # this determines the x width of this tree
     depth = get_tree_depth(myTree)
-    firstStr = myTree.keys()[0]  # the text label for this node should be this
+    firstStr = list(myTree.keys())[0]  # the text label for this node should be this
     cntrPt = (plotTree.xOff + (1.0 + float(numLeafs)) / 2.0 / plotTree.totalW, plotTree.yOff)
     plot_mid_text(cntrPt, parentPt, nodeTxt)  # 标记子节点属性值
     plot_node(firstStr, cntrPt, parentPt, decision_node)
     secondDict = myTree[firstStr]
-    #减少Y轴偏移
+    # 减少Y轴偏移
     plotTree.yOff = plotTree.yOff - 1.0 / plotTree.totalD
     for key in secondDict.keys():
         if type(secondDict[key]) == dict:  # test to see if the nodes are dictonaires, if not they are leaf nodes

@@ -94,16 +94,18 @@ def spam_test():
     class_list = []
     full_text = []
     for i in range(1, 26):
-        word_list = text_parse(open("email/spam/%d.txt" % i).read())
+        # 读取广告邮件数据
+        word_list = text_parse(open("email/spam/%d.txt" % i, "rb").read().decode())
         doc_list.append(word_list)
         full_text.extend(word_list)
         class_list.append(1)
-        word_list = text_parse(open("email/ham/%d.txt" % i).read())
+        # 读取正常邮件
+        word_list = text_parse(str(open("email/ham/%d.txt" % i, "rb").read().decode()))
         doc_list.append(word_list)
         full_text.extend(word_list)
         class_list.append(0)
     vocab_list = create_vocab_list(doc_list)  # 创建词表
-    training_set = range(50)
+    training_set = list(range(50))
     test_set = []  # 创建测试集
     for i in range(10):
         rand_index = int(random.uniform(0, len(training_set)))
@@ -152,7 +154,7 @@ def local_words(feed1, feed0):
     for w_pair in top_30_words:
         if w_pair[0] in vocab_list:
             vocab_list.remove(w_pair[0])
-    training_set = range(2 * min_len)
+    training_set = list(range(2 * min_len))
     test_set = []
     for i in range(20):
         rand_index = int(random.uniform(0, len(training_set)))
@@ -178,18 +180,19 @@ def get_top_words(ny, sf):
     top_ny = []
     top_sf = []
     for i in range(len(p0v)):
-        if p0v[i] > -6.0: top_sf.append((vocab_list[i], p0v[i]))
-        if p1v[i] > -6.0: top_ny.append((vocab_list[i], p1v[i]))
-    sorted_sf = sorted(top_sf, lambda pair: pair[1], reverse=True)
+        if p0v[i] > -6.0:
+            top_sf.append((vocab_list[i], p0v[i]))
+        if p1v[i] > -6.0:
+            top_ny.append((vocab_list[i], p1v[i]))
+    sorted_sf = sorted(top_sf, key=lambda pair: pair[1], reverse=True)
     print("****************SF****************")
-    for item in sorted_sf:
-        print(item[0])
-    sorted_ny = sorted(top_ny, lambda pair: pair[1], reverse=True)
+    print([item[0] for item in sorted_sf])
+    sorted_ny = sorted(top_ny, key=lambda pair: pair[1], reverse=True)
     print("****************NY****************")
-    for item in sorted_ny:
-        print(item[0])
+    print([item[0] for item in sorted_ny])
 
 
 ny = feedparser.parse("http://newyork.craigslist.org/res/index.rss")
 sf = feedparser.parse("http://sfbay.craigslist.org/apa/index.rss")
 get_top_words(ny, sf)
+# spam_test()
